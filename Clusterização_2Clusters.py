@@ -19,9 +19,7 @@ scaled_features = scaler.fit_transform(merchant_group[['mean_amount', 'refund_ra
 
 kmeans = KMeans(n_clusters=2, random_state=0).fit(scaled_features)
 
-
 merchant_group['cluster'] = kmeans.labels_
-
 
 cluster_risk = merchant_group.groupby('cluster').agg(
    refund_rate=('refund_rate', 'mean'),
@@ -33,7 +31,6 @@ low_risk_cluster = cluster_risk.mean(axis=1).idxmin()
 merchant_group['adjusted_cluster'] = merchant_group['cluster'].apply(
    lambda x: 1 if x == low_risk_cluster else 0
 )
-
 
 plt.figure(figsize=(10, 6))
 colors = ['red', 'blue']
@@ -48,15 +45,12 @@ for cluster in range(2):
        alpha=0.6
    )
 
-
 plt.xlabel('Ticket Médio')
 plt.ylabel('Taxa de Reembolso (%)')
 plt.title('Clusterização de Comerciantes (considerando taxa de transações negadas)')
 plt.legend()
 plt.show()
 
-
 low_risk_merchants = merchant_group[merchant_group['adjusted_cluster'] == 1]
-
 
 print(low_risk_merchants)
